@@ -1,0 +1,51 @@
+type Query {
+  chats: [Chat!]
+  users: [User!]
+  user(userId: ID!): User
+  chat(chatId: ID!): Chat
+}
+
+type Mutation {
+  sendMessage(chatId: ID!, content: String!): Boolean!
+  register(
+    firstName: String!
+    secondName: String!
+    userName: String!
+    email: String!
+    password: String!
+  ): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+  createChat(name: String!): Boolean!
+}
+
+type Subscription {
+  newChat: Chat
+  newMessageInChat(chatId: ID!): Message
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  secondName: String!
+  userName: String!
+  chats: [Chat!]
+}
+
+type Message {
+  content: String!
+  user: User!
+  chat: Chat!
+}
+
+type Chat {
+  id: ID!
+  creator: User!
+  name: String!
+  messages: [Message!]
+  users: [User!]!
+}
