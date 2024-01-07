@@ -12,7 +12,7 @@ model User {
   email String @unique
   firstName String
   secondName String 
-  userName String 
+  userName String @unique
   password String
   chats Chat[] @relation("chatUsers")
   createdChats Chat[] @relation("createdChats")
