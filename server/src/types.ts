@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import { ServerResponse } from "http";
 
 export interface Context {
   prisma: PrismaClient;
   userId: number;
+  res: ServerResponse;
 }
 
 export type QueryUserArgs = {
@@ -39,8 +41,4 @@ export type MutationCreateChatArgs = {
   name: string;
 };
 
-export type UserData = {
-  firstName: string;
-  secondName: string;
-  userName: string;
-};
+export type UserFilter = { userName: string } | { email: string } | { id: number };

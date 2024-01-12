@@ -1,5 +1,4 @@
 import { Context } from "./types";
-import { Request, Response } from "express";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { ApolloServer } from "@apollo/server";
@@ -22,10 +21,11 @@ const server = new ApolloServer<Context>({
 
 (async () => {
   const { url } = await startStandaloneServer(server, {
-    context: async () => {
+    context: async ({ req, res }) => {
       return {
         prisma: prisma,
         userId: 5,
+        res,
       };
     },
   });

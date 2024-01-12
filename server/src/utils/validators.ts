@@ -1,10 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { MutationRegisterArgs } from "../types";
 
-export async function validateUserData(
-  data: MutationRegisterArgs,
-  prisma: PrismaClient
-) {
+export async function validateUserData(data: MutationRegisterArgs, prisma: PrismaClient) {
   const { email, firstName, secondName, userName } = data;
 
   const sameEmailCheck = await prisma.user.findUnique({
@@ -13,8 +10,7 @@ export async function validateUserData(
     },
   });
 
-  if (sameEmailCheck)
-    return { valid: false, message: "User with given email already exists" };
+  if (sameEmailCheck) return { valid: false, message: "User with given email already exists" };
 
   const sameUserNameCheck = await prisma.user.findUnique({
     where: {
@@ -22,8 +18,7 @@ export async function validateUserData(
     },
   });
 
-  if (sameUserNameCheck)
-    return { valid: false, message: "User with given username already exists" };
+  if (sameUserNameCheck) return { valid: false, message: "User with given username already exists" };
 
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g;
