@@ -3,7 +3,7 @@ import { ServerResponse } from "http";
 
 export interface Context {
   prisma: PrismaClient;
-  userId: number;
+  userId: number | null;
   res: ServerResponse;
 }
 
@@ -39,6 +39,24 @@ export type MutationLoginArgs = {
 
 export type MutationCreateChatArgs = {
   name: string;
+};
+
+export type UserPublicData = {
+  id: number;
+  userName: string;
+  firstName: string;
+  secondName: string;
+};
+
+export type AuthPayload = {
+  token: string;
+  user: UserPublicData;
+};
+
+export type Chat = {
+  id: number;
+  name: string;
+  creatorId: number;
 };
 
 export type UserFilter = { userName: string } | { email: string } | { id: number };

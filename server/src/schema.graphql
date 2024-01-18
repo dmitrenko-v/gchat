@@ -7,13 +7,7 @@ type Query {
 
 type Mutation {
   sendMessage(chatId: ID!, content: String!): Boolean!
-  register(
-    firstName: String!
-    secondName: String!
-    userName: String!
-    email: String!
-    password: String!
-  ): AuthPayload
+  register(firstName: String!, secondName: String!, userName: String!, email: String!, password: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
   createChat(name: String!): Chat
 }
@@ -44,8 +38,9 @@ type Message {
 
 type Chat {
   id: ID!
+  creatorId: Int!
   creator: User!
   name: String!
-  messages: [Message!]
+  messages: [Message!]!
   users: [User!]!
 }

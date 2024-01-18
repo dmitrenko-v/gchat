@@ -6,8 +6,12 @@ import { PrismaClient } from "@prisma/client";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
 import * as Mutation from "./resolvers/Mutation";
+import * as Query from "./resolvers/Query";
+import * as User from "./resolvers/User";
+import * as Chat from "./resolvers/Chat";
+import { getUserId } from "./utils/parseToken";
 
-const resolvers = { Mutation };
+const resolvers = { Mutation, Query, User, Chat };
 const typeDefs = readFileSync(join(__dirname, "schema.graphql"), {
   encoding: "utf-8",
 });
@@ -22,9 +26,10 @@ const server = new ApolloServer<Context>({
 (async () => {
   const { url } = await startStandaloneServer(server, {
     context: async ({ req, res }) => {
+      const userId = req && req.headers.authorization ? getUserId(req.headers.authorization) : null;
       return {
         prisma: prisma,
-        userId: 5,
+        userId,
         res,
       };
     },
