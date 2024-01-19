@@ -53,10 +53,7 @@ export type AuthPayload = {
   user: UserPublicData;
 };
 
-export type Chat = {
-  id: number;
+export type ChatData = {
   name: string;
   creatorId: number;
 };
-
-export type UserFilter = { userName: string } | { email: string } | { id: number };

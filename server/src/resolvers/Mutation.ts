@@ -1,11 +1,12 @@
-import { MutationCreateChatArgs, Context, MutationRegisterArgs, MutationLoginArgs, AuthPayload, Chat } from "../types";
+import { MutationCreateChatArgs, Context, MutationRegisterArgs, MutationLoginArgs, AuthPayload } from "../types";
+import { Chat } from "@prisma/client";
 import { GraphQLError } from "graphql";
 import { validateUserData } from "../utils/validators";
 import { hash, compare } from "bcrypt";
-import { createUser, findUser } from "../service/userService";
+import { createUserService, findUserService } from "../service/userService";
 import * as jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { findChat } from "../service/chatService";
+import { findChatService, createChatService } from "../service/chatService";
 dotenv.config();
 
 const BAD_USER_INPUT_ERROR = {
@@ -31,7 +32,7 @@ export async function createChat(_: any, args: MutationCreateChatArgs, contextVa
     });
   }
 
-  const creator = await findUser({ id: userId }, prisma);
+  const creator = await findUserService({ id: userId }, prisma);
 
   if (!creator) {
     throw new GraphQLError("User doesn't exist", {
@@ -39,23 +40,24 @@ export async function createChat(_: any, args: MutationCreateChatArgs, contextVa
     });
   }
 
-  const chat = await findChat(args.name, prisma);
+  const chat = await findChatService({ name: args.name }, prisma);
 
   if (chat) {
     throw new GraphQLError("Chat with given name already exists", { extensions: BAD_USER_INPUT_ERROR });
   }
 
-  const newChat = await prisma.chat.create({
-    data: {
+  const newChat = await createChatService(
+    {
       name: args.name,
       creatorId: userId,
     },
-  });
+    prisma
+  );
 
   return {
     id: newChat.id,
-    name: args.name,
-    creatorId: userId,
+    name: newChat.name,
+    creatorId: newChat.creatorId,
   };
 }
 
@@ -70,7 +72,7 @@ export async function register(_: any, args: MutationRegisterArgs, contextValue:
       extensions: BAD_USER_INPUT_ERROR,
     });
 
-  const userDataToSend = await createUser({ ...args, password: hashedPassword }, prisma);
+  const userDataToSend = await createUserService({ ...args, password: hashedPassword }, prisma);
 
   const token = jwt.sign({ userId: userDataToSend.id }, process.env.SECRET_KEY as string, { expiresIn: "1h" });
 
@@ -85,7 +87,7 @@ export async function login(_: any, args: MutationLoginArgs, contextValue: Conte
 
   const { email, password } = args;
 
-  const user = await findUser({ email }, prisma);
+  const user = await findUserService({ email }, prisma);
 
   if (!user) {
     throw new GraphQLError("User with given email not found", {

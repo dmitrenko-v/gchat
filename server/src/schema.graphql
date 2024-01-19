@@ -32,8 +32,10 @@ type User {
 
 type Message {
   content: String!
+  sentAt: String!
+  userId: Int!
+  chatId: Int!
   user: User!
-  chat: Chat!
 }
 
 type Chat {
