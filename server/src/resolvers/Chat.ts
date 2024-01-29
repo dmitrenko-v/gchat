@@ -5,9 +5,7 @@ import { findMessagesInChatService } from "../service/messageService";
 import { getChatUsersService } from "../service/chatService";
 
 export async function creator(parent: Chat, __: null, contextValue: Context): Promise<UserPublicData | null> {
-  const { prisma } = contextValue;
-
-  const creator = await findUserService({ id: parent.creatorId }, prisma);
+  const creator = await findUserService({ id: parent.creatorId });
 
   if (!creator) return null;
 
@@ -22,17 +20,13 @@ export async function creator(parent: Chat, __: null, contextValue: Context): Pr
 }
 
 export async function messages(parent: Chat, __: null, contextValue: Context): Promise<Message[]> {
-  const { prisma } = contextValue;
-
-  const messages = findMessagesInChatService(parent.id, prisma);
+  const messages = await findMessagesInChatService(parent.id);
 
   return messages;
 }
 
 export async function users(parent: Chat, __: null, contextValue: Context): Promise<UserPublicData[] | null> {
-  const { prisma } = contextValue;
-
-  const chatUsers = await getChatUsersService(parent.id, prisma);
+  const chatUsers = await getChatUsersService(parent.id);
 
   return chatUsers;
 }

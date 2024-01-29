@@ -1,10 +1,8 @@
-import { Context } from "../types";
+import { Chat } from "@prisma/client";
+import { getUserChatsService } from "../service/userService";
+import { Context, UserPublicData } from "../types";
 
-export async function chats(_: any, __: null, contextValue: Context) {
-  const { prisma, userId } = contextValue;
-  if (!userId) {
-    return;
-  }
-  const chats = await prisma.user.findUnique({ where: { id: userId } }).chats();
+export async function chats(parent: UserPublicData, __: null, contextValue: Context): Promise<Chat[] | null> {
+  const chats = await getUserChatsService({ id: parent.id });
   return chats;
 }

@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { PubSub } from "graphql-subscriptions";
 import { ServerResponse } from "http";
 
 export interface Context {
-  prisma: PrismaClient;
+  pubsub: PubSub;
   userId: number | null;
   res: ServerResponse;
 }
@@ -56,4 +56,10 @@ export type AuthPayload = {
 export type ChatData = {
   name: string;
   creatorId: number;
+};
+
+export type MessageData = {
+  userId: number;
+  chatId: number;
+  content: string;
 };

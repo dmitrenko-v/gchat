@@ -3,9 +3,7 @@ import { Context, UserPublicData } from "../types";
 import { findUserService } from "../service/userService";
 
 export async function user(parent: Message, __: null, contextValue: Context): Promise<UserPublicData | null> {
-  const { prisma } = contextValue;
-
-  const user = await findUserService({ id: parent.userId }, prisma);
+  const user = await findUserService({ id: parent.userId });
 
   if (!user) return null;
 

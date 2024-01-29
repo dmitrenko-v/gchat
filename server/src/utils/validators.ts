@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { MutationRegisterArgs } from "../types";
+import { prisma } from "..";
 
-export async function validateUserData(data: MutationRegisterArgs, prisma: PrismaClient) {
+export async function validateUserData(data: MutationRegisterArgs) {
   const { email, firstName, secondName, userName } = data;
 
   const sameEmailCheck = await prisma.user.findUnique({
